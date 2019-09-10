@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "745189938235",
+    "firebase_url": "https://nutrievaluator.firebaseio.com",
+    "project_id": "nutrievaluator",
+    "storage_bucket": "nutrievaluator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745189938235:android:7a9d39fbdc5c864ba3f81e",
+        "android_client_info": {
+          "package_name": "cscholtz.android.nutrievaluator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745189938235-g26vjiclu612ct2k798ikrqv7bhhjr33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cscholtz.android.nutrievaluator",
+            "certificate_hash": "770dac3ae349e8a0eed416a7db4dc6f6e34bd999"
+          }
+        },
+        {
+          "client_id": "745189938235-hvu889h1encr86svqqfcgjd40s01jd4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBacBQmZlvWtghwG9VB1Ckp7wGQU27Dy1E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745189938235-hvu889h1encr86svqqfcgjd40s01jd4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
