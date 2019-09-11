@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
     String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
