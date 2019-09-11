@@ -23,17 +23,18 @@ public class PDFActivity extends AppCompatActivity {
     private PDFView pdfView;
     private File file;
     Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_pdf);
         storageReference = FirebaseStorage.getInstance().getReference();
+
         pdfView = (PDFView) findViewById(R.id.pdfView);
         bundle = getIntent().getExtras();
         if(bundle!=null){
             file = new File(bundle.getString("path",""));
-            //showToast(bundle.getString("path",""));
         }
         pdfView.fromFile(file)
                 .enableSwipe(true)
@@ -60,15 +61,15 @@ public class PDFActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void UploadFile(){
+    private void UploadFile()  {
+
         Uri fileu = Uri.fromFile(file);
         StorageReference stg = storageReference.child(file.getName());
         stg.putFile(fileu)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        showToast("File Uploaded");
-                    }
+                        showToast("File Uploaded");                    }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -76,7 +77,6 @@ public class PDFActivity extends AppCompatActivity {
                         showToast("Uploading Error");
                     }
                 });
-
     }
 
     private  void showToast(String text){

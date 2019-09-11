@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         calcularButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TomarInput();
-                //InputEjemplo();
+                //TomarInput();
+                InputEjemplo();
                 if(!nombre.isEmpty() && !sexo.isEmpty() && !edad.isEmpty() && !peso.isEmpty() && !talla.isEmpty() && !cintura.isEmpty() && !cadera.isEmpty() && !braquial.isEmpty() && !carpo.isEmpty() && !tricipital.isEmpty() && !bicipital.isEmpty() && !suprailiaco.isEmpty() && !subescapular.isEmpty()){
                     Intent intent = new Intent(getBaseContext(), PDFActivity.class);
                     EvaluarDatos();
