@@ -1,5 +1,8 @@
 package cscholtz.android.nutrievaluator;
 
+import android.os.Build;
+import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +12,7 @@ import android.view.Window;
 import android.widget.Toast;
 import com.github.barteksc.pdfviewer.PDFView;
 import java.io.File;
+import java.lang.reflect.Field;
 
 
 public class PDFActivity extends AppCompatActivity {
@@ -44,11 +48,19 @@ public class PDFActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId() ){
             case R.id.upload_item:
-                uploader.UploadFile(file);
+                FileHelper.zip( file.getName(),file.getName(),true);
+                FileHelper.zip("pdfs","",false);
+
+                File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/"+file.getName()+".zip");
+                File f2 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/pdfs.zip");
+
+                uploader.UploadFile(f1);
+                uploader.UploadFile(f2);
                 showToast("Uploaded");
                 return true;
         }
