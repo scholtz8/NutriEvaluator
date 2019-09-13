@@ -54,13 +54,11 @@ public class PDFActivity extends AppCompatActivity {
         switch (item.getItemId() ){
             case R.id.upload_item:
                 FileHelper.zip( file.getName(),file.getName(),true);
-                FileHelper.zip("pdfs","",false);
-
+                //FileHelper.zip("pdfs","",false);
                 File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/"+file.getName()+".zip");
-                File f2 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/pdfs.zip");
-
+                //File f2 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/pdfs.zip");
                 uploader.UploadFile(f1);
-                uploader.UploadFile(f2);
+                //uploader.UploadFile(f2);
                 showToast("Uploaded");
                 return true;
         }

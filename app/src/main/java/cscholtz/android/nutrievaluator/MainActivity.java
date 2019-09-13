@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioGroup sexoGroup;
     private RadioButton sexoInput;
     private Button calcularButton;
+
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
     private TemplatePDF templatePDF;
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
