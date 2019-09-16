@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -16,7 +15,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainOption1Activity extends AppCompatActivity {
+public class LoopUploadActivity extends AppCompatActivity {
 
     private Button doItButton;
 
@@ -121,7 +120,7 @@ public class MainOption1Activity extends AppCompatActivity {
     }
 
     private  void showToast(String text){
-        Toast.makeText(MainOption1Activity.this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(LoopUploadActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
     public void InputEjemplo()throws Exception{

@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         calcularButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TomarInput();
-                InputEjemplo();
+                TomarInput();
+                //InputEjemplo();
                 if(!nombre.isEmpty() && !sexo.isEmpty() && !edad.isEmpty() && !peso.isEmpty() && !talla.isEmpty() && !cintura.isEmpty() && !cadera.isEmpty() && !braquial.isEmpty() && !carpo.isEmpty() && !tricipital.isEmpty() && !bicipital.isEmpty() && !suprailiaco.isEmpty() && !subescapular.isEmpty()){
                     Intent intent = new Intent(getBaseContext(), PDFActivity.class);
                     EvaluarDatos();
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         sexoInput = (RadioButton) findViewById(sexid);
         sexo = sexoInput.getText().toString();
     }
-
+/*
     public void InputEjemplo(){
         nombre = "Cristian";
         edad = "25";
@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         sexoInput = (RadioButton) findViewById(sexid);
         sexo = sexoInput.getText().toString();
     }
+    */
+
 
     public void EvaluarDatos(){
         Evaluator E = new Evaluator(nombre, sexo, new Integer(edad),  new Integer(tricipital),  new Integer(bicipital),  new Integer(suprailiaco), new Integer(subescapular),  new Float(peso),  new Float(talla),  new Float(cintura),  new Float(cadera),  new Float(braquial),  new Float(carpo));

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainOption1Activity">
+    tools:context=".LoopUploadActivity">
 
     <Button
         android:id="@+id/do_it_button"

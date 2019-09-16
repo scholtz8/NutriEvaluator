@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainOption2Activity extends AppCompatActivity {
+public class CacheUploadActivity extends AppCompatActivity {
 
     private Button doItagainButton;
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
@@ -119,7 +119,7 @@ public class MainOption2Activity extends AppCompatActivity {
     }
 
     private  void showToast(String text){
-        Toast.makeText(MainOption2Activity.this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(CacheUploadActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 
     public void InputEjemplo()throws Exception{
