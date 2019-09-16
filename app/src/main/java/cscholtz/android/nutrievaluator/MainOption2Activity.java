@@ -7,7 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,6 +24,7 @@ public class MainOption2Activity extends AppCompatActivity {
     private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
     private String FileName;
     private  Uploader uploader;
+    private JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,15 +36,35 @@ public class MainOption2Activity extends AppCompatActivity {
         doItagainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputEjemplo();
-                EvaluarDatos();
-                CreateTemplate();
-                ZipFile();
-                UploadFile();
+                EjecutarTareas();
                 showToast(FileName+" Uploaded");
             }
         });
 
+    }
+    public void EjecutarTareas() {
+        String jsonString;
+        try {
+            InputStream is = getAssets().open("inputs_example.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            jsonString = new String(buffer,"UTF-8");
+
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for(int i = 0;i<jsonArray.length(); i++){
+                jsonObject = jsonArray.getJSONObject(i);
+                InputEjemplo();
+                EvaluarDatos();
+                CreateTemplate();
+            }
+            ZipFile();
+            UploadFile();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void EvaluarDatos(){
@@ -97,20 +122,20 @@ public class MainOption2Activity extends AppCompatActivity {
         Toast.makeText(MainOption2Activity.this, text, Toast.LENGTH_SHORT).show();
     }
 
-    public void InputEjemplo(){
-        nombre = "Cristian Scholtz";
-        edad = "25";
-        peso = "91.1";
-        talla = "1.79";
-        cintura ="110";
-        cadera = "109";
-        braquial = "33";
-        carpo = "17";
-        tricipital = "11";
-        bicipital = "19";
-        suprailiaco = "12";
-        subescapular = "20";
-        sexo = "Masculino";
+    public void InputEjemplo()throws Exception{
+        nombre = jsonObject.getString("nombre");
+        sexo = jsonObject.getString("sexo");
+        edad = jsonObject.getString("edad");
+        peso = jsonObject.getString("peso");
+        talla = jsonObject.getString("talla");
+        cintura = jsonObject.getString("cintura");
+        cadera = jsonObject.getString("cadera");
+        braquial = jsonObject.getString("braquial");
+        carpo = jsonObject.getString("carpo");
+        tricipital = jsonObject.getString("tricipital");
+        bicipital = jsonObject.getString("bicipital");;
+        suprailiaco = jsonObject.getString("suprailiaco");
+        subescapular = jsonObject.getString("subescapular");
     }
 
 }

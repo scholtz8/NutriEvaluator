@@ -10,14 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainOption2Activity">
+
+        </activity>
+        <activity android:name=".MainOption1Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".MainOption1Activity">
-
         </activity>
         <activity android:name=".PDFActivity" />
         <activity android:name=".MainActivity">
