@@ -5,11 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -23,25 +22,26 @@ public class CacheUploadActivity extends AppCompatActivity {
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
     private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
     private String FileName;
-    private  Uploader uploader;
+    private Uploader uploader;
     private JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_option2);
+        setContentView(R.layout.activity_cache_upload);
 
         doItagainButton = (Button) findViewById(R.id.do_it_again_button);
         uploader = new Uploader();
+
         doItagainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EjecutarTareas();
-                showToast(FileName+" Uploaded");
+                showToast("Archivos Uploaded");
             }
         });
-
     }
+    
     public void EjecutarTareas() {
         String jsonString;
         try {
@@ -51,7 +51,6 @@ public class CacheUploadActivity extends AppCompatActivity {
             is.read(buffer);
             is.close();
             jsonString = new String(buffer,"UTF-8");
-
             JSONArray jsonArray = new JSONArray(jsonString);
             for(int i = 0;i<jsonArray.length(); i++){
                 jsonObject = jsonArray.getJSONObject(i);

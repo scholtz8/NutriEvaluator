@@ -5,11 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -18,19 +17,18 @@ import java.util.Date;
 public class LoopUploadActivity extends AppCompatActivity {
 
     private Button doItButton;
-
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
     private TemplatePDF templatePDF;
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
     private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
     private String FileName;
-    private  Uploader uploader;
-    private  JSONObject jsonObject;
+    private Uploader uploader;
+    private JSONObject jsonObject;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_option1);
-
+        setContentView(R.layout.activity_loop_upload);
         doItButton = (Button) findViewById(R.id.do_it_button);
         uploader = new Uploader();
         doItButton.setOnClickListener(new View.OnClickListener() {
@@ -40,7 +38,6 @@ public class LoopUploadActivity extends AppCompatActivity {
                 showToast("Archivos Uploaded");
             }
         });
-
     }
 
     public void EjecutarTareas() {
@@ -52,7 +49,6 @@ public class LoopUploadActivity extends AppCompatActivity {
             is.read(buffer);
             is.close();
             jsonString = new String(buffer,"UTF-8");
-
             JSONArray jsonArray = new JSONArray(jsonString);
             for(int i = 0;i<jsonArray.length(); i++){
                 jsonObject = jsonArray.getJSONObject(i);
@@ -62,7 +58,6 @@ public class LoopUploadActivity extends AppCompatActivity {
                 ZipFile();
                 UploadFile();
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }

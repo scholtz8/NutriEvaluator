@@ -1,9 +1,6 @@
 package cscholtz.android.nutrievaluator;
 
-
 import android.content.Intent;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 TomarInput();
-                //InputEjemplo();
                 if(!nombre.isEmpty() && !sexo.isEmpty() && !edad.isEmpty() && !peso.isEmpty() && !talla.isEmpty() && !cintura.isEmpty() && !cadera.isEmpty() && !braquial.isEmpty() && !carpo.isEmpty() && !tricipital.isEmpty() && !bicipital.isEmpty() && !suprailiaco.isEmpty() && !subescapular.isEmpty()){
                     Intent intent = new Intent(getBaseContext(), PDFActivity.class);
                     EvaluarDatos();
@@ -86,26 +82,6 @@ public class MainActivity extends AppCompatActivity {
         sexoInput = (RadioButton) findViewById(sexid);
         sexo = sexoInput.getText().toString();
     }
-/*
-    public void InputEjemplo(){
-        nombre = "Cristian";
-        edad = "25";
-        peso = "91.1";
-        talla = "1.79";
-        cintura ="110";
-        cadera = "109";
-        braquial = "33";
-        carpo = "17";
-        tricipital = "11";
-        bicipital = "19";
-        suprailiaco = "12";
-        subescapular = "20";
-        int sexid = sexoGroup.getCheckedRadioButtonId();
-        sexoInput = (RadioButton) findViewById(sexid);
-        sexo = sexoInput.getText().toString();
-    }
-    */
-
 
     public void EvaluarDatos(){
         Evaluator E = new Evaluator(nombre, sexo, new Integer(edad),  new Integer(tricipital),  new Integer(bicipital),  new Integer(suprailiaco), new Integer(subescapular),  new Float(peso),  new Float(talla),  new Float(cintura),  new Float(cadera),  new Float(braquial),  new Float(carpo));
