@@ -22,7 +22,7 @@ public class Main2Activity extends AppCompatActivity {
         normal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(Main2Activity.this, LoopUploadActivity.class);
+                Intent myIntent = new Intent(Main2Activity.this, MainActivity.class);
                 Main2Activity.this.startActivity(myIntent);
             }
         });
