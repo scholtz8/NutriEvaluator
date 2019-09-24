@@ -30,7 +30,7 @@ public class CacheUploadActivity extends AppCompatActivity {
     private String FileName;
     private JSONObject jsonObject;
     private StorageReference storageReference;
-    public int num;
+    public int num,l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,9 @@ public class CacheUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            for(int i = 0;i<jsonArray.length(); i++){
+            l = jsonArray.length();
+            l=50;
+            for(int i = 0;i<l; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
