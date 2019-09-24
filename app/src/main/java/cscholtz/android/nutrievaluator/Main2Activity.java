@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class Main2Activity extends AppCompatActivity {
-    private Button loop,cache;
+    private Button loop,cache,normal;
 
 
     @Override
@@ -15,9 +15,17 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        normal = (Button) findViewById(R.id.buttonNormal);
         loop = (Button) findViewById(R.id.buttonLoop);
         cache = (Button) findViewById(R.id.buttonCache);
 
+        normal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(Main2Activity.this, LoopUploadActivity.class);
+                Main2Activity.this.startActivity(myIntent);
+            }
+        });
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
