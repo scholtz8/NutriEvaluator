@@ -30,7 +30,7 @@ public class CacheUploadActivity extends AppCompatActivity {
     private String FileName;
     private JSONObject jsonObject;
     private StorageReference storageReference;
-    public int num,l;
+    public int len;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,6 @@ public class CacheUploadActivity extends AppCompatActivity {
 
         startButton = (Button) findViewById(R.id.startButtonCache);
         storageReference = FirebaseStorage.getInstance().getReference();
-        num = 0;
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +58,8 @@ public class CacheUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            l = jsonArray.length();
-            l=50;
-            for(int i = 0;i<l; i++){
+            len = jsonArray.length();
+            for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
@@ -83,10 +81,7 @@ public class CacheUploadActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        num +=1;
-                        if(num == 1){
-                            showToast("Archivos Uploaded");
-                        }
+                        Toast.makeText(CacheUploadActivity.this, "Archivos Uplaoded", Toast.LENGTH_LONG).show();
                     }
                 });
 

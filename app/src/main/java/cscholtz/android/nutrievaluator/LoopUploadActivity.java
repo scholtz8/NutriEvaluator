@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Semaphore;
 
 public class LoopUploadActivity extends AppCompatActivity {
 
@@ -30,7 +31,8 @@ public class LoopUploadActivity extends AppCompatActivity {
     private String FileName;
     private JSONObject jsonObject;
     private StorageReference storageReference;
-    public int num, l;
+    public int num, len;
+    public final Semaphore available = new Semaphore(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +60,9 @@ public class LoopUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            l = jsonArray.length();
-            l= 50;
-            for(int i = 0;i<l; i++){
+            len = jsonArray.length();
+            len= 50;
+            for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
@@ -82,8 +84,8 @@ public class LoopUploadActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         num +=1;
-                        if(num == l){
-                            showToast("Archivos Uploaded");
+                        if(num == len){
+                            Toast.makeText(LoopUploadActivity.this, "Archivos Uplaoded", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -147,7 +149,4 @@ public class LoopUploadActivity extends AppCompatActivity {
         subescapular = jsonObject.getString("subescapular");
     }
 
-    private  void showToast(String text){
-        Toast.makeText(LoopUploadActivity.this, text, Toast.LENGTH_SHORT).show();
-    }
 }
