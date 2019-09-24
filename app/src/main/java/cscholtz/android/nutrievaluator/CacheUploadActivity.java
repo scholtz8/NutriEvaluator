@@ -145,8 +145,5 @@ public class CacheUploadActivity extends AppCompatActivity {
         subescapular = jsonObject.getString("subescapular");
     }
 
-    private  void showToast(String text){
-        Toast.makeText(CacheUploadActivity.this, text, Toast.LENGTH_SHORT).show();
-    }
 }
 
