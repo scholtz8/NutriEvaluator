@@ -32,7 +32,6 @@ public class LoopUploadActivity extends AppCompatActivity {
     private JSONObject jsonObject;
     private StorageReference storageReference;
     public int num, len;
-    public final Semaphore available = new Semaphore(1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
