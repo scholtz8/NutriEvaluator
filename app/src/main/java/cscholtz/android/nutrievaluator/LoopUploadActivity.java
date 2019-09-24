@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.File;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.Semaphore;
@@ -24,23 +26,36 @@ import java.util.concurrent.Semaphore;
 public class LoopUploadActivity extends AppCompatActivity {
 
     private Button startButton;
+    private TextView tiempo;
+
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
-    private TemplatePDF templatePDF;
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
     private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
+
+    private TemplatePDF templatePDF;
     private String FileName;
+
     private JSONObject jsonObject;
     private StorageReference storageReference;
     public int num, len;
+
+    private SimpleDateFormat tsf;
+    private String t1, t2;
+    private Date d1, d2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_upload);
         startButton = (Button) findViewById(R.id.startButtonLoop);
+        tiempo = (TextView) findViewById(R.id.tiempoLoop);
 
-        storageReference = FirebaseStorage.getInstance().getReference();
+        tsf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.SSS");
+        d1 = null;
+        d2 = null;
         num = 0;
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +76,7 @@ public class LoopUploadActivity extends AppCompatActivity {
             JSONArray jsonArray = new JSONArray(jsonString);
             len = jsonArray.length();
             len= 50;
+            t1 = tsf.format(new Date());
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
@@ -84,7 +100,16 @@ public class LoopUploadActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         num +=1;
                         if(num == len){
-                            Toast.makeText(LoopUploadActivity.this, "Archivos Uplaoded", Toast.LENGTH_LONG).show();
+                            t2 = tsf.format(new Date());
+                            //Toast.makeText(LoopUploadActivity.this, "Archivos Uplaoded", Toast.LENGTH_LONG).show();
+                            try {
+                                d1 = tsf.parse(t1);
+                                d2 = tsf.parse(t2);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            long diff = d2.getTime()-d1.getTime();
+                            tiempo.setText(String.valueOf(diff)+" miliseconds");
                         }
                     }
                 });
