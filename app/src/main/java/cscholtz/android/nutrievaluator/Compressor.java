@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class FileHelper {
+public class Compressor {
 
     private static final int BUFFER_SIZE = 8192;//2048;
     private static String ExternalDirectory = Environment.getExternalStorageDirectory().toString();
@@ -44,7 +44,7 @@ public class FileHelper {
             }
 
         } catch (Exception e) {
-            Log.d("FileHelper", e.getMessage());
+            Log.d("Compressor", e.getMessage());
             return;
         } finally {
             if (zipOutputStream != null)

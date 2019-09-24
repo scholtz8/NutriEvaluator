@@ -1,12 +1,18 @@
 package cscholtz.android.nutrievaluator;
 
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.File;
@@ -16,28 +22,29 @@ import java.util.Date;
 
 public class CacheUploadActivity extends AppCompatActivity {
 
-    private Button doItagainButton;
+    private Button startButton;
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
     private TemplatePDF templatePDF;
     private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
     private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
     private String FileName;
-    private Uploader uploader;
     private JSONObject jsonObject;
+    private StorageReference storageReference;
+    public int num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cache_upload);
 
-        doItagainButton = (Button) findViewById(R.id.do_it_again_button);
-        uploader = new Uploader();
+        startButton = (Button) findViewById(R.id.startButtonCache);
+        storageReference = FirebaseStorage.getInstance().getReference();
+        num = 0;
 
-        doItagainButton.setOnClickListener(new View.OnClickListener() {
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EjecutarTareas();
-                showToast("Archivos Uploaded");
             }
         });
     }
@@ -56,14 +63,52 @@ public class CacheUploadActivity extends AppCompatActivity {
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
-                CreateTemplate();
+                crearPDF();
             }
-            ZipFile();
-            UploadFile();
+            Compressor.zip( "ArchivosPdfs","",false);
+            subirArchivo();
 
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void subirArchivo(){
+        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/ArchivosPdfs.zip");
+        Uri uri_file = Uri.fromFile(f1);
+        StorageReference stg = storageReference.child("Cache").child(f1.getName());
+        stg.putFile(uri_file)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        num +=1;
+                        if(num == 1){
+                            showToast("Archivos Uploaded");
+                        }
+                    }
+                });
+
+    }
+
+    public void crearPDF(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String currentDate = sdf.format(new Date());
+        templatePDF = new TemplatePDF(getApplicationContext());
+        FileName = nombre+"_"+currentDate;
+        templatePDF.openDocument(FileName);
+        templatePDF.addMetaData("Evaluacion Nutricional"+nombre,"evaluacion","cs");
+        templatePDF.addTitles("Evaluacion Nutricional","Paciente: "+nombre,currentDate);
+        templatePDF.addParagraph(IMC);
+        templatePDF.addParagraph(IPT);
+        templatePDF.addParagraph(PESO_IDEAL);
+        templatePDF.addParagraph(CMB);
+        templatePDF.addParagraph(AMB);
+        templatePDF.addParagraph(AGB);
+        templatePDF.addParagraph(PT);
+        templatePDF.addParagraph(CIN);
+        templatePDF.addParagraph(RELCINCAD);
+        templatePDF.addParagraph(CONTEXTURA);
+        templatePDF.closeDocument();
     }
 
     public void EvaluarDatos(){
@@ -87,40 +132,6 @@ public class CacheUploadActivity extends AppCompatActivity {
         helper.cerrar();
     }
 
-    public void CreateTemplate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String currentDate = sdf.format(new Date());
-        templatePDF = new TemplatePDF(getApplicationContext());
-        FileName = nombre+"_"+currentDate;
-        templatePDF.openDocument(FileName);
-        templatePDF.addMetaData("Evaluacion Nutricional"+nombre,"evaluacion","cs");
-        templatePDF.addTitles("Evaluacion Nutricional","Paciente: "+nombre,currentDate);
-        templatePDF.addParagraph(IMC);
-        templatePDF.addParagraph(IPT);
-        templatePDF.addParagraph(PESO_IDEAL);
-        templatePDF.addParagraph(CMB);
-        templatePDF.addParagraph(AMB);
-        templatePDF.addParagraph(AGB);
-        templatePDF.addParagraph(PT);
-        templatePDF.addParagraph(CIN);
-        templatePDF.addParagraph(RELCINCAD);
-        templatePDF.addParagraph(CONTEXTURA);
-        templatePDF.closeDocument();
-    }
-
-    public void ZipFile(){
-        FileHelper.zip( "ArchivosPdfs","",false);
-    }
-
-    public void UploadFile(){
-        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/ArchivosPdfs.zip");
-        uploader.UploadFile(f1);
-    }
-
-    private  void showToast(String text){
-        Toast.makeText(CacheUploadActivity.this, text, Toast.LENGTH_SHORT).show();
-    }
-
     public void InputEjemplo()throws Exception{
         nombre = jsonObject.getString("nombre");
         sexo = jsonObject.getString("sexo");
@@ -137,5 +148,8 @@ public class CacheUploadActivity extends AppCompatActivity {
         subescapular = jsonObject.getString("subescapular");
     }
 
+    private  void showToast(String text){
+        Toast.makeText(CacheUploadActivity.this, text, Toast.LENGTH_SHORT).show();
+    }
 }
 
