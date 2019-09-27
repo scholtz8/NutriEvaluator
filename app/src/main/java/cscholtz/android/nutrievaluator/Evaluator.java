@@ -41,17 +41,6 @@ public class Evaluator {
         this.contextura = 100*talla/carpo;
     }
 
-    public String HoM(){
-        if(sexo.equals("Masculino")){
-            return "HOMBRES";
-        }else{
-            return "MUJERES";
-        }
-    }
-
-    public int getEdad(){
-        return edad;
-    };
     public double getIMC(){
         return IMC;
     }

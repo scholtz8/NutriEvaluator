@@ -72,8 +72,14 @@ public class SQLiteOpen_Helper extends SQLiteOpenHelper {
     }
 
     public Cursor percentiles(String id_edad, String sexo,String medicion){
+        String StrSexo;
+        if(sexo.equals("Masculino")){
+            StrSexo = "HOMBRES";
+        }else{
+            StrSexo = "MUJERES";
+        }
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+medicion+"_"+sexo+" WHERE id_edad like '"+id_edad+"'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM "+medicion+"_"+StrSexo+" WHERE id_edad like '"+id_edad+"'", null);
         return cursor;
     }
 

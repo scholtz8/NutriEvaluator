@@ -28,20 +28,25 @@ public class CacheUploadActivity extends AppCompatActivity {
     private TextView tiempo;
 
     private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
-    private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
-    private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
+    private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1); //clase que crea y hace consultas a la base de datos
+    private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf, con valores obtenidos del evaluador
 
+    //Clase para crear el archivo PDF
     private TemplatePDF templatePDF;
+    //Guarda el nombre del archivo PDF actual
     private String FileName;
 
-    private JSONObject jsonObject;
+    //Referencia a Storage para acceder a FirebaseStorage en la Cloud
     private StorageReference storageReference;
-    public int len;
 
+    //JasonObjhect para recorrer el archivo .json
+    private JSONObject jsonObject;
+    private int len; // cantidad de input a sacar del archivo .json
+
+    //Variables para hacer la medicion dl tiempo de ejecucion de la tarea
     private SimpleDateFormat tsf;
-    private String t1, t2;
-    private Date d1, d2;
-
+    private String t1, t2; //Time inicial y final
+    private Date d1, d2; //Para obtener tiempo inicial y final
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,7 @@ public class CacheUploadActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                t1 = tsf.format(new Date());
                 EjecutarTareas();
             }
         });
@@ -73,8 +79,7 @@ public class CacheUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            len = jsonArray.length();
-            t1 = tsf.format(new Date());
+            len = 100;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
@@ -98,7 +103,6 @@ public class CacheUploadActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         t2 = tsf.format(new Date());
-                        //Toast.makeText(CacheUploadActivity.this, "Archivos Uplaoded", Toast.LENGTH_LONG).show();
                         try {
                             d1 = tsf.parse(t1);
                             d2 = tsf.parse(t2);
@@ -140,13 +144,13 @@ public class CacheUploadActivity extends AppCompatActivity {
         IMC = "IMC: "+String.format("%.2f",E.getIMC()) + " kg/mt² "+E.evaluarIMC();
         IPT = "%IPT: "+String.format("%.2f",E.getIPT())+"% "+E.evaluarIPT();
         PESO_IDEAL = "PESO IDEAL: "+String.format("%.2f",E.getPesoIdeal())+" kg";
-        Integer[] rCMB = E.rangoPercentiles(E.getCMB(),E.Percentiles(helper.percentiles(e,E.HoM(),"CMB")));
+        Integer[] rCMB = E.rangoPercentiles(E.getCMB(),E.Percentiles(helper.percentiles(e,sexo,"CMB")));
         CMB = "CMB: "+String.format("%.0f",E.getCMB())+ " mm (P"+rCMB[0]+"- P"+rCMB[1]+") "+E.evaluarPercentilesCMB(rCMB[0],rCMB[1]);
-        Integer[] rAMB = E.rangoPercentiles(E.getAMB(),E.Percentiles(helper.percentiles(e,E.HoM(),"AMB")));
+        Integer[] rAMB = E.rangoPercentiles(E.getAMB(),E.Percentiles(helper.percentiles(e,sexo,"AMB")));
         AMB = "AMB: "+String.format("%.0f",E.getAMB())+ " mm (P"+rAMB[0]+"- P"+rAMB[1]+") "+E.evaluarPercentiles(rAMB[0],rAMB[1]);
-        Integer[] rAGB = E.rangoPercentiles(E.getAGB(),E.Percentiles(helper.percentiles(e,E.HoM(),"AGB")));
+        Integer[] rAGB = E.rangoPercentiles(E.getAGB(),E.Percentiles(helper.percentiles(e,sexo,"AGB")));
         AGB = "AGB: "+String.format("%.0f",E.getAGB())+ " mm (P"+rAGB[0]+"- P"+rAGB[1]+") "+E.evaluarPercentiles(rAGB[0],rAGB[1]);
-        Integer[] rPT = E.rangoPercentiles(E.getPT(),E.Percentiles(helper.percentiles(e,E.HoM(),"PT")));
+        Integer[] rPT = E.rangoPercentiles(E.getPT(),E.Percentiles(helper.percentiles(e,sexo,"PT")));
         PT = "PT: "+String.format("%.0f",E.getPT())+" mm (P"+rPT[0]+"- P"+rPT[1]+") "+E.evaluarPercentiles(rPT[0],rPT[1]);
         CIN = "CINTURA: "+String.format("%.2f",E.getCin())+" cm "+E.evaluarCintura();
         RELCINCAD = "REL CINT/CAD: "+String.format("%.2f",E.getRelCinCad())+" "+E.evaluarRelCinCad();
