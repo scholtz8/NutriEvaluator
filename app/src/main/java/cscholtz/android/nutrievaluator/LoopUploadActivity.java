@@ -79,13 +79,12 @@ public class LoopUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            len= 100;
+            len= 20;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
                 crearPDF();
-                Compressor.zip( FileName,FileName+".pdf",true);
                 subirArchivo();
             }
         }catch (Exception e){
@@ -94,7 +93,7 @@ public class LoopUploadActivity extends AppCompatActivity {
     }
 
     public void subirArchivo(){
-        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/"+FileName+".zip");
+        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/"+FileName+".pdf");
         Uri uri_file = Uri.fromFile(f1);
         StorageReference stg = storageReference.child("Loop").child(f1.getName());
         stg.putFile(uri_file)

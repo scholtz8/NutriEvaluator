@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.File;
@@ -79,14 +79,17 @@ public class CacheUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            len = 100;
+            PDFMergerUtility ut = new PDFMergerUtility();
+            len = 20;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputEjemplo();
                 EvaluarDatos();
                 crearPDF();
+                ut.addSource(Environment.getExternalStorageDirectory().toString()+"/PDF/"+FileName+".pdf");
             }
-            Compressor.zip( "ArchivosPdfs","",false);
+            ut.setDestinationFileName(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
+            ut.mergeDocuments();
             subirArchivo();
 
         }catch (Exception e){
@@ -95,7 +98,7 @@ public class CacheUploadActivity extends AppCompatActivity {
     }
 
     public void subirArchivo(){
-        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/ZIPS/ArchivosPdfs.zip");
+        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
         Uri uri_file = Uri.fromFile(f1);
         StorageReference stg = storageReference.child("Cache").child(f1.getName());
         stg.putFile(uri_file)
