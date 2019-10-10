@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.sonarqube'
 
 android {
     compileSdkVersion 28
@@ -16,6 +17,19 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+sonarqube{
+    sonarqube{
+        properties{
+            property "sonar.projectName","NutriEvaluator"
+            property "sonar.projectKey","NutriEvaluator"
+            property "sonar.host.url","http://localhost:9000"
+            property "sonar.projectVersion","1"
+            property "sonar.language","java"
+            property "sonar.sources","src/main/java"
+            property "sonar.sourceEncoding","UTF-8"
         }
     }
 }
