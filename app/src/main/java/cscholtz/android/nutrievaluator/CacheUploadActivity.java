@@ -77,7 +77,7 @@ public class CacheUploadActivity extends AppCompatActivity {
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
             PDFMergerUtility ut = new PDFMergerUtility();
-            len = 20;
+            len = 50;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputSetter();

@@ -76,7 +76,7 @@ public class LoopUploadActivity extends AppCompatActivity {
             is.close();
             jsonString = new String(buffer,"UTF-8");
             JSONArray jsonArray = new JSONArray(jsonString);
-            len= 20;
+            len= 50;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
                 InputSetter();
