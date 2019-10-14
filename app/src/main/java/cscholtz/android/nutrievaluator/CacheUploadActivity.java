@@ -1,5 +1,4 @@
 package cscholtz.android.nutrievaluator;
-
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -7,12 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,12 +61,12 @@ public class CacheUploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 t1 = tsf.format(new Date());
-                EjecutarTareas();
+                ExecuteFunctions();
             }
         });
     }
     
-    public void EjecutarTareas() {
+    public void ExecuteFunctions() {
         String jsonString;
         try {
             InputStream is = getAssets().open("inputs_example.json");
@@ -83,21 +80,21 @@ public class CacheUploadActivity extends AppCompatActivity {
             len = 20;
             for(int i = 0;i<len; i++){
                 jsonObject = jsonArray.getJSONObject(i);
-                InputEjemplo();
-                EvaluarDatos();
-                crearPDF();
+                InputSetter();
+                EvaluateData();
+                CreatePDF();
                 ut.addSource(Environment.getExternalStorageDirectory().toString()+"/PDF/"+FileName+".pdf");
             }
             ut.setDestinationFileName(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
             ut.mergeDocuments();
-            subirArchivo();
+            UploadFile();
 
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public void subirArchivo(){
+    public void UploadFile(){
         File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
         Uri uri_file = Uri.fromFile(f1);
         StorageReference stg = storageReference.child("Cache").child(f1.getName());
@@ -119,7 +116,7 @@ public class CacheUploadActivity extends AppCompatActivity {
 
     }
 
-    public void crearPDF(){
+    public void CreatePDF(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDate = sdf.format(new Date());
         templatePDF = new TemplatePDF(getApplicationContext());
@@ -140,7 +137,7 @@ public class CacheUploadActivity extends AppCompatActivity {
         templatePDF.closeDocument();
     }
 
-    public void EvaluarDatos(){
+    public void EvaluateData(){
         Evaluator E = new Evaluator(nombre, sexo, new Integer(edad),  new Integer(tricipital),  new Integer(bicipital),  new Integer(suprailiaco), new Integer(subescapular),  new Float(peso),  new Float(talla),  new Float(cintura),  new Float(cadera),  new Float(braquial),  new Float(carpo));
         helper.abrir();
         String e = helper.getIdEdad(new Integer(edad));
@@ -161,7 +158,7 @@ public class CacheUploadActivity extends AppCompatActivity {
         helper.cerrar();
     }
 
-    public void InputEjemplo()throws Exception{
+    public void InputSetter()throws Exception{
         nombre = jsonObject.getString("nombre");
         sexo = jsonObject.getString("sexo");
         edad = jsonObject.getString("edad");

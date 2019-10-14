@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/nutricon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Main2Activity">
+        <activity android:name=".MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,8 +20,8 @@
         </activity>
         <activity android:name=".CacheUploadActivity"/>
         <activity android:name=".LoopUploadActivity"/>
-        <activity android:name=".PDFActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".PdfViewerActivity" />
+        <activity android:name=".InputActivity"></activity>
     </application>
 
 

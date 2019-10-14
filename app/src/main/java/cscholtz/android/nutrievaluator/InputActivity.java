@@ -1,5 +1,4 @@
 package cscholtz.android.nutrievaluator;
-
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.Toolbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class InputActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private EditText nombreInput, edadInput, pesoInput, tallaInput, cinturaInput, caderaInput, braquialInput, carpoInput, tricipitalInput, bicipitalInput, suprailiacoInput, subescapularInput;
     private RadioGroup sexoGroup;
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_input);
 
         nombreInput = (EditText) findViewById(R.id.nombre);
         sexoGroup = (RadioGroup) findViewById(R.id.sexo);
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TomarInput();
                 if(!nombre.isEmpty() && !sexo.isEmpty() && !edad.isEmpty() && !peso.isEmpty() && !talla.isEmpty() && !cintura.isEmpty() && !cadera.isEmpty() && !braquial.isEmpty() && !carpo.isEmpty() && !tricipital.isEmpty() && !bicipital.isEmpty() && !suprailiaco.isEmpty() && !subescapular.isEmpty()){
-                    Intent intent = new Intent(getBaseContext(), PDFActivity.class);
+                    Intent intent = new Intent(getBaseContext(), PdfViewerActivity.class);
                     EvaluarDatos();
                     CreateTemplate();
                     pdfView();
@@ -129,6 +128,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private  void showToast(String text){
-        Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(InputActivity.this, text, Toast.LENGTH_SHORT).show();
     }
 }

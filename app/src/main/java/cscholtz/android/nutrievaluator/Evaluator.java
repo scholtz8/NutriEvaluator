@@ -1,9 +1,5 @@
 package cscholtz.android.nutrievaluator;
-
-import android.content.Context;
 import android.database.Cursor;
-
-import java.security.PrivilegedAction;
 
 public class Evaluator {
     private String nombre,sexo;
