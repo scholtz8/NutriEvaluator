@@ -181,7 +181,7 @@ public class CacheUploadActivity extends AppCompatActivity {
         sexo = jsonObject.getString("sexo");
         edad = jsonObject.getString("edad");
         medidas[0] = Float.parseFloat(jsonObject.getString("peso"));
-        medidas[2] = Float.parseFloat(jsonObject.getString("talla"));
+        medidas[1] = Float.parseFloat(jsonObject.getString("talla"));
         circunferencias[0] = Float.parseFloat(jsonObject.getString("cintura"));
         circunferencias[1] = Float.parseFloat(jsonObject.getString("cadera"));
         circunferencias[2] = Float.parseFloat(jsonObject.getString("braquial"));
