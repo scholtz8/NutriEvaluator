@@ -26,7 +26,7 @@ sonarqube{
             property "sonar.projectName","NutriEvaluator-Merge"
             property "sonar.projectKey","NutriEvaluator-Merge"
             property "sonar.host.url","http://localhost:9000"
-            property "sonar.projectVersion","1"
+            property "sonar.projectVersion","1.4"
             property "sonar.language","java"
             property "sonar.sources","src/main/java"
             property "sonar.sourceEncoding","UTF-8"

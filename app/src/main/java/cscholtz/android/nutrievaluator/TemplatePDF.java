@@ -27,8 +27,8 @@ public class TemplatePDF {
         this.context = context;
     }
 
-    public void openDocument(String file_name){
-        createFile(file_name);
+    public void openDocument(String fileName){
+        createFile(fileName);
         try {
             document = new Document(PageSize.A4);
             PdfWriter pdfWriter = PdfWriter.getInstance(document,new FileOutputStream(pdfFile));

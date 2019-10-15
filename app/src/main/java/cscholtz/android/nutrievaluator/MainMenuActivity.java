@@ -6,16 +6,15 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainMenuActivity extends AppCompatActivity {
-    private Button loop,cache,normal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        normal = (Button) findViewById(R.id.buttonNormal);
-        loop = (Button) findViewById(R.id.buttonLoop);
-        cache = (Button) findViewById(R.id.buttonCache);
+        Button normal = (Button) findViewById(R.id.buttonNormal);
+        Button loop = (Button) findViewById(R.id.buttonLoop);
+        Button cache = (Button) findViewById(R.id.buttonCache);
 
         normal.setOnClickListener(new View.OnClickListener() {
             @Override

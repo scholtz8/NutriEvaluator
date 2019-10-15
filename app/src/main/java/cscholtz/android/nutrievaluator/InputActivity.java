@@ -8,22 +8,53 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InputActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private EditText nombreInput, edadInput, pesoInput, tallaInput, cinturaInput, caderaInput, braquialInput, carpoInput, tricipitalInput, bicipitalInput, suprailiacoInput, subescapularInput;
+    private EditText nombreInput;
+    private EditText edadInput;
+    private EditText pesoInput;
+    private EditText tallaInput;
+    private EditText cinturaInput;
+    private EditText caderaInput;
+    private EditText braquialInput;
+    private EditText carpoInput;
+    private EditText tricipitalInput;
+    private EditText bicipitalInput;
+    private EditText suprailiacoInput;
+    private EditText subescapularInput;
     private RadioGroup sexoGroup;
-    private RadioButton sexoInput;
-    private Button calcularButton;
 
-    private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
-    private TemplatePDF templatePDF;
-    private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1);
-    String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf
-
+    private String nombre;
+    private String sexo;
+    private String edad;
+    private String peso;
+    private String talla;
+    private String cintura;
+    private String cadera;
+    private String braquial;
+    private String carpo;
+    private String tricipital;
+    private String bicipital;
+    private String suprailiaco;
+    private String subescapular;
+    private Float[] medidas = new Float[2];
+    private Integer[] pliegues = new Integer[4];
+    private Float[] circunferencias = new Float[4];
+    private sqliteOpenHelper helper = new sqliteOpenHelper(this,"BD1",null,1);
+    //reciben los string de texto a poner el el pdf, con valores obtenidos del evaluador
+    private String imc;
+    private String ipt;
+    private String pesoideal;
+    private String cmb;
+    private String amb;
+    private String agb;
+    private String pt;
+    private String cin;
+    private String relcincad;
+    private String contextura;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,25 +77,24 @@ public class InputActivity extends AppCompatActivity {
         suprailiacoInput  = (EditText) findViewById(R.id.suprailiaco);
         subescapularInput  = (EditText) findViewById(R.id.subescapular);
 
-        calcularButton = (Button) findViewById(R.id.calcular_button);
+        Button calcularButton = (Button) findViewById(R.id.calcular_button);
 
         calcularButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TomarInput();
+                tomarInput();
                 if(!nombre.isEmpty() && !sexo.isEmpty() && !edad.isEmpty() && !peso.isEmpty() && !talla.isEmpty() && !cintura.isEmpty() && !cadera.isEmpty() && !braquial.isEmpty() && !carpo.isEmpty() && !tricipital.isEmpty() && !bicipital.isEmpty() && !suprailiaco.isEmpty() && !subescapular.isEmpty()){
-                    Intent intent = new Intent(getBaseContext(), PdfViewerActivity.class);
-                    EvaluarDatos();
-                    CreateTemplate();
-                    pdfView();
+                    new Intent(getBaseContext(), PdfViewerActivity.class);
+                    evaluarDatos();
+                    createTemplate();
                 }else{
-                    showToast("Llene todos los campos");
+                    Toast.makeText(InputActivity.this, "Llene todos los campos", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
-    public void TomarInput(){
+    public void tomarInput(){
         nombre = nombreInput.getText().toString();
         edad = edadInput.getText().toString();
         peso = pesoInput.getText().toString();
@@ -78,56 +108,70 @@ public class InputActivity extends AppCompatActivity {
         suprailiaco = suprailiacoInput.getText().toString();
         subescapular = subescapularInput.getText().toString();
         int sexid = sexoGroup.getCheckedRadioButtonId();
-        sexoInput = (RadioButton) findViewById(sexid);
+        RadioButton sexoInput = (RadioButton) findViewById(sexid);
         sexo = sexoInput.getText().toString();
+
+        medidas[0] = Float.parseFloat(peso);
+        medidas[1] = Float.parseFloat(talla);
+        circunferencias[0] = Float.parseFloat(cintura);
+        circunferencias[1] = Float.parseFloat(cadera);
+        circunferencias[2] = Float.parseFloat(braquial);
+        circunferencias[3] = Float.parseFloat(carpo);
+        pliegues[0] = Integer.valueOf(tricipital);
+        pliegues[1] = Integer.valueOf(bicipital);
+        pliegues[2] = Integer.valueOf(suprailiaco);
+        pliegues[3] = Integer.valueOf(subescapular);
     }
 
-    public void EvaluarDatos(){
-        Evaluator E = new Evaluator(nombre, sexo, new Integer(edad),  new Integer(tricipital),  new Integer(bicipital),  new Integer(suprailiaco), new Integer(subescapular),  new Float(peso),  new Float(talla),  new Float(cintura),  new Float(cadera),  new Float(braquial),  new Float(carpo));
+    public void evaluarDatos(){
+        Evaluator ev = new Evaluator(nombre, sexo, new Integer(edad),  medidas, pliegues, circunferencias);
         helper.abrir();
         String e = helper.getIdEdad(new Integer(edad));
-        IMC = "IMC: "+String.format("%.2f",E.getIMC()) + " kg/mt² "+E.evaluarIMC();
-        IPT = "%IPT: "+String.format("%.2f",E.getIPT())+"% "+E.evaluarIPT();
-        PESO_IDEAL = "PESO IDEAL: "+String.format("%.2f",E.getPesoIdeal())+" kg";
-        Integer[] rCMB = E.rangoPercentiles(E.getCMB(),E.Percentiles(helper.percentiles(e,sexo,"CMB")));
-        CMB = "CMB: "+String.format("%.0f",E.getCMB())+ " mm (P"+rCMB[0]+"- P"+rCMB[1]+") "+E.evaluarPercentilesCMB(rCMB[0],rCMB[1]);
-        Integer[] rAMB = E.rangoPercentiles(E.getAMB(),E.Percentiles(helper.percentiles(e,sexo,"AMB")));
-        AMB = "AMB: "+String.format("%.0f",E.getAMB())+ " mm (P"+rAMB[0]+"- P"+rAMB[1]+") "+E.evaluarPercentiles(rAMB[0],rAMB[1]);
-        Integer[] rAGB = E.rangoPercentiles(E.getAGB(),E.Percentiles(helper.percentiles(e,sexo,"AGB")));
-        AGB = "AGB: "+String.format("%.0f",E.getAGB())+ " mm (P"+rAGB[0]+"- P"+rAGB[1]+") "+E.evaluarPercentiles(rAGB[0],rAGB[1]);
-        Integer[] rPT = E.rangoPercentiles(E.getPT(),E.Percentiles(helper.percentiles(e,sexo,"PT")));
-        PT = "PT: "+String.format("%.0f",E.getPT())+" mm (P"+rPT[0]+"- P"+rPT[1]+") "+E.evaluarPercentiles(rPT[0],rPT[1]);
-        CIN = "CINTURA: "+String.format("%.2f",E.getCin())+" cm "+E.evaluarCintura();
-        RELCINCAD = "REL CINT/CAD: "+String.format("%.2f",E.getRelCinCad())+" "+E.evaluarRelCinCad();
-        CONTEXTURA = "CONTEXTURA: "+String.format("%.2f",E.getContextura())+" "+E.evaluarContextura();
+        imc = "IMC: "+String.format("%.2f",ev.getIMC()) + " kg/mt² "+ev.evaluarIMC();
+        ipt = "%IPT: "+String.format("%.2f",ev.getIPT())+"% "+ev.evaluarIPT();
+        pesoideal = "PESO IDEAL: "+String.format("%.2f",ev.getPesoIdeal())+" kg";
+        Integer[] rCMB = ev.rangoPercentiles(ev.getCMB(),ev.percentiles(helper.percentiles(e,sexo,"CMB")));
+        cmb = "CMB: "+mmFloat(ev.getCMB())+percentilRange(rCMB[0],rCMB[1])+ev.evaluarPercentilesCMB(rCMB[0],rCMB[1]);
+        Integer[] rAMB = ev.rangoPercentiles(ev.getAMB(),ev.percentiles(helper.percentiles(e,sexo,"AMB")));
+        amb = "AMB: "+mmFloat(ev.getAMB())+percentilRange(rAMB[0],rAMB[1])+ev.evaluarPercentiles(rAMB[0],rAMB[1]);
+        Integer[] rAGB = ev.rangoPercentiles(ev.getAGB(),ev.percentiles(helper.percentiles(e,sexo,"AGB")));
+        agb = "AGB: "+mmFloat(ev.getAGB())+percentilRange(rAGB[0],rAGB[1])+ev.evaluarPercentiles(rAGB[0],rAGB[1]);
+        Integer[] rPT = ev.rangoPercentiles(ev.getPT(),ev.percentiles(helper.percentiles(e,sexo,"PT")));
+        pt = "PT: "+mmFloat(ev.getPT())+percentilRange(rPT[0],rPT[1])+ev.evaluarPercentiles(rPT[0],rPT[1]);
+        cin = "CINTURA: "+String.format("%.2f",ev.getCin())+" cm "+ev.evaluarCintura();
+        relcincad = "REL CINT/CAD: "+String.format("%.2f",ev.getRelCinCad())+" "+ev.evaluarRelCinCad();
+        contextura = "CONTEXTURA: "+String.format("%.2f",ev.getContextura())+" "+ev.evaluarContextura();
         helper.cerrar();
     }
 
-    public void CreateTemplate(){
+    public String mmFloat(double f){
+        return String.format("%.0f",f)+"mm ";
+    }
+
+    public String percentilRange(Integer p1, Integer p2){
+        return "(P"+p1+"- P"+p2+") ";
+    }
+
+    public void createTemplate(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDate = sdf.format(new Date());
+        TemplatePDF templatePDF;
         templatePDF = new TemplatePDF(getApplicationContext());
         templatePDF.openDocument(nombre+"_"+currentDate);
         templatePDF.addMetaData("Evaluacion Nutricional"+nombre,"evaluacion","cs");
         templatePDF.addTitles("Evaluacion Nutricional","Paciente: "+nombre,currentDate);
-        templatePDF.addParagraph(IMC);
-        templatePDF.addParagraph(IPT);
-        templatePDF.addParagraph(PESO_IDEAL);
-        templatePDF.addParagraph(CMB);
-        templatePDF.addParagraph(AMB);
-        templatePDF.addParagraph(AGB);
-        templatePDF.addParagraph(PT);
-        templatePDF.addParagraph(CIN);
-        templatePDF.addParagraph(RELCINCAD);
-        templatePDF.addParagraph(CONTEXTURA);
+        templatePDF.addParagraph(imc);
+        templatePDF.addParagraph(ipt);
+        templatePDF.addParagraph(pesoideal);
+        templatePDF.addParagraph(cmb);
+        templatePDF.addParagraph(amb);
+        templatePDF.addParagraph(agb);
+        templatePDF.addParagraph(pt);
+        templatePDF.addParagraph(cin);
+        templatePDF.addParagraph(relcincad);
+        templatePDF.addParagraph(contextura);
         templatePDF.closeDocument();
-    }
-
-    public void pdfView(){
         templatePDF.viewPDF();
     }
 
-    private  void showToast(String text){
-        Toast.makeText(InputActivity.this, text, Toast.LENGTH_SHORT).show();
-    }
 }

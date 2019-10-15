@@ -17,9 +17,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 
 public class PdfViewerActivity extends AppCompatActivity {
-    private PDFView pdfView;
     private File file;
-    Bundle bundle;
     private StorageReference storageReference;
 
     @Override
@@ -29,8 +27,8 @@ public class PdfViewerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf_viewer);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        pdfView = (PDFView) findViewById(R.id.pdfView);
-        bundle = getIntent().getExtras();
+        PDFView pdfView = (PDFView) findViewById(R.id.pdfView);
+        Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
             file = new File(bundle.getString("path",""));
         }
@@ -52,18 +50,17 @@ public class PdfViewerActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId() ){
-            case R.id.upload_item:
-                Uri uri_file = Uri.fromFile(file);
-                StorageReference stg = storageReference.child(file.getName());
-                stg.putFile(uri_file)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(PdfViewerActivity.this, file.getName()+".pdf Uploaded", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                return true;
+        if (item.getItemId()==  R.id.upload_item){
+            Uri uriFile = Uri.fromFile(file);
+            StorageReference stg = storageReference.child(file.getName());
+            stg.putFile(uriFile)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(PdfViewerActivity.this, file.getName()+".pdf Uploaded", Toast.LENGTH_LONG).show();
+                        }
+                });
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
