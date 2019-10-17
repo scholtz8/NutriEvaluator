@@ -16,16 +16,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.io.File;
-
 
 public class PDFActivity extends AppCompatActivity {
     private PDFView pdfView;
     private File file;
     Bundle bundle;
     private StorageReference storageReference;
-    public int num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +31,6 @@ public class PDFActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        num = 0;
         pdfView = (PDFView) findViewById(R.id.pdfView);
         bundle = getIntent().getExtras();
         if(bundle!=null){
@@ -58,9 +54,7 @@ public class PDFActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId() ){
-            case R.id.upload_item:
-                Compressor.zip( file.getName(),file.getName(),true);
+        if (item.getItemId() == R.id.upload_item){
                 File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/"+file.getName());
                 Uri uri_file = Uri.fromFile(f1);
                 StorageReference stg = storageReference.child(f1.getName());
@@ -68,13 +62,9 @@ public class PDFActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                num +=1;
-                                if(num == 1){
                                     showToast("Archivo Uploaded");
-                                }
                             }
                         });
-                showToast("Uploaded");
                 return true;
         }
         return super.onOptionsItemSelected(item);

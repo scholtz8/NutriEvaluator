@@ -38,12 +38,12 @@ public class TemplatePDF {
         }catch (Exception e){
             Log.e("openDocument",e.toString());
         }
-
     }
 
     public void closeDocument(){
         document.close();
     }
+
     public void addMetaData(String title,String subject,String author){
         document.addTitle(title);
         document.addSubject(subject);

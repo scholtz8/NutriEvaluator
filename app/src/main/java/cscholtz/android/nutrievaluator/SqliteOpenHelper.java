@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class sqliteOpenHelper extends SQLiteOpenHelper {
+public class SqliteOpenHelper extends SQLiteOpenHelper {
     private String queryCreate1 = "CREATE TABLE EDADES (id_edad	TEXT, min INTEGER, max NUMERIC, PRIMARY KEY(id_edad));";
     private String queryInsert1 = "INSERT INTO EDADES VALUES ('e01',1,1.9),('e02',2,2.9),('e03',3,3.9),('e04',4,4.9),('e05',5,5.9),('e06',6,6.9),('e07',7,7.9),('e08',8,8.9),('e09',9,9.9),('e10',10,10.9),('e11',11,11.9), ('e12',12,12.9), ('e13',13,13.9),('e14',14,14.9),('e15',15,15.9),('e16',16,16.9),('e17',17,17.9),('e18',18,18.9),('e19',19,24.9),('e20',25,34.9),('e21',35,44.9),('e22',45,54.9),('e23',55,64.9),('e24',65,74.9)";
     private String queryCreate2 = "CREATE TABLE AMB_MUJERES ( id_edad TEXT, P5 INTEGER, P10 INTEGER, P25 INTEGER, P50 INTEGER, P75 INTEGER, P90 INTEGER, P95 INTEGER, PRIMARY KEY(id_edad), FOREIGN KEY(id_edad) REFERENCES EDADES(id_edad));";
@@ -26,7 +26,7 @@ public class sqliteOpenHelper extends SQLiteOpenHelper {
     private String queryInsert9 = "INSERT INTO PT_HOMBRES VALUES ('e01',6,7,8,10,12,14,16), ('e02',6,7,8,10,12,14,15), ('e03',6,7,8,10,11,14,15), ('e04',6,6,8,9,11,12,14), ('e05',6,6,8,9,11,14,15), ('e06',5,6,7,8,10,13,16), ('e07',5,6,7,9,12,15,17), ('e08',5,6,7,8,10,13,16), ('e09',6,6,7,10,13,17,18), ('e10',6,6,8,10,14,18,21), ('e11',6,6,8,11,16,20,24), ('e12',6,6,8,11,14,22,28), ('e13',5,5,7,10,14,22,26), ('e14',4,5,7,9,14,21,24), ('e15',4,5,6,8,11,18,24), ('e16',4,5,6,8,12,16,22), ('e17',5,5,6,8,12,16,29), ('e18',4,5,6,9,13,20,24), ('e19',4,5,7,10,15,20,22), ('e20',5,6,8,12,16,20,24), ('e21',5,6,8,12,16,20,23), ('e22',6,6,8,12,15,20,25), ('e23',5,6,8,11,14,19,22), ('e24',4,6,8,11,15,19,22); ";
 
 
-    public sqliteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public SqliteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -54,7 +54,7 @@ public class sqliteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        throw new UnsupportedOperationException();
+
     }
 
     public void abrir(){

@@ -26,10 +26,30 @@ public class CacheUploadActivity extends AppCompatActivity {
 
     private Button startButton;
     private TextView tiempo;
-
-    private String nombre, sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;//reciben los parametros de los inputs
-    private SQLiteOpen_Helper helper = new SQLiteOpen_Helper(this,"BD1",null,1); //clase que crea y hace consultas a la base de datos
-    private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA; //reciben los string de texto a poner el el pdf, con valores obtenidos del evaluador
+    private String nombre;
+    private String sexo;
+    private String edad;
+    private String peso;
+    private String talla;
+    private String cintura;
+    private String cadera;
+    private String braquial;
+    private String carpo;
+    private String tricipital;
+    private String bicipital;
+    private String suprailiaco;
+    private String subescapular;//reciben los parametros de los inputs
+    private SqliteOpenHelper helper = new SqliteOpenHelper(this,"BD1",null,1); //clase que crea y hace consultas a la base de datos
+    private String IMC;
+    private String IPT;
+    private String PESO_IDEAL;
+    private String CMB;
+    private String AMB;
+    private String AGB;
+    private String PT;
+    private String CIN;
+    private String RELCINCAD;
+    private String CONTEXTURA; //reciben los string de texto a poner el el pdf, con valores obtenidos del evaluador
 
     //Clase para crear el archivo PDF
     private TemplatePDF templatePDF;
@@ -45,8 +65,10 @@ public class CacheUploadActivity extends AppCompatActivity {
 
     //Variables para hacer la medicion dl tiempo de ejecucion de la tarea
     private SimpleDateFormat tsf;
-    private String t1, t2; //Time inicial y final
-    private Date d1, d2; //Para obtener tiempo inicial y final
+    private String t1;
+    private String t2; //Time inicial y final
+    private Date d1;
+    private Date d2; //Para obtener tiempo inicial y final
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,36 +86,46 @@ public class CacheUploadActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 t1 = tsf.format(new Date());
-                EjecutarTareas();
+                try {
+                    EjecutarTareas();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
     
-    public void EjecutarTareas() {
+    public void EjecutarTareas() throws Exception {
         String jsonString;
+        InputStream is = null;
         try {
-            InputStream is = getAssets().open("inputs_example.json");
+            is = getAssets().open("inputs_example.json");
             int size = is.available();
             byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            jsonString = new String(buffer,"UTF-8");
-            JSONArray jsonArray = new JSONArray(jsonString);
-            PDFMergerUtility ut = new PDFMergerUtility();
-            len = 20;
-            for(int i = 0;i<len; i++){
-                jsonObject = jsonArray.getJSONObject(i);
-                InputEjemplo();
-                EvaluarDatos();
-                crearPDF();
-                ut.addSource(Environment.getExternalStorageDirectory().toString()+"/PDF/"+FileName+".pdf");
+            if(is.read(buffer)>0) {
+                jsonString = new String(buffer, "UTF-8");
+                JSONArray jsonArray = new JSONArray(jsonString);
+                PDFMergerUtility ut = new PDFMergerUtility();
+                len = 20;
+                for (int i = 0; i < len; i++) {
+                    jsonObject = jsonArray.getJSONObject(i);
+                    InputEjemplo();
+                    EvaluarDatos();
+                    crearPDF();
+                    ut.addSource(Environment.getExternalStorageDirectory().toString() + "/PDF/" + FileName + ".pdf");
+                }
+                ut.setDestinationFileName(Environment.getExternalStorageDirectory().toString() + "/PDF/MergedPDF.pdf");
+                ut.mergeDocuments();
+                subirArchivo();
             }
-            ut.setDestinationFileName(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
-            ut.mergeDocuments();
-            subirArchivo();
 
         }catch (Exception e){
             e.printStackTrace();
+        }
+        finally {
+            if(is!=null) {
+                is.close();
+            }
         }
     }
 
@@ -166,13 +198,14 @@ public class CacheUploadActivity extends AppCompatActivity {
         sexo = jsonObject.getString("sexo");
         edad = jsonObject.getString("edad");
         peso = jsonObject.getString("peso");
+        peso = jsonObject.getString("peso");
         talla = jsonObject.getString("talla");
         cintura = jsonObject.getString("cintura");
         cadera = jsonObject.getString("cadera");
         braquial = jsonObject.getString("braquial");
         carpo = jsonObject.getString("carpo");
         tricipital = jsonObject.getString("tricipital");
-        bicipital = jsonObject.getString("bicipital");;
+        bicipital = jsonObject.getString("bicipital");
         suprailiaco = jsonObject.getString("suprailiaco");
         subescapular = jsonObject.getString("subescapular");
     }

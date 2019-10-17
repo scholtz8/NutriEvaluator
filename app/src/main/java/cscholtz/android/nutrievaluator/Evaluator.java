@@ -1,15 +1,30 @@
 package cscholtz.android.nutrievaluator;
 
-import android.content.Context;
 import android.database.Cursor;
 
-import java.security.PrivilegedAction;
 
 public class Evaluator {
-    private String nombre,sexo;
-    private int edad, tricipital, bicipital, suprailiaco, subescapular;
-    private float peso, talla, cintura, cadera, braquial, carpo;
-    private double IMC, PesoIdeal,IPT,CMB,AMB,AGB,RelCinCad,contextura;
+    private String nombre;
+    private String sexo;
+    private int edad;
+    private int tricipital;
+    private int bicipital;
+    private int suprailiaco;
+    private int subescapular;
+    private float peso;
+    private float talla;
+    private float cintura;
+    private float cadera;
+    private float braquial;
+    private float carpo;
+    private double IMC;
+    private double PesoIdeal;
+    private double IPT;
+    private double CMB;
+    private double AMB;
+    private double AGB;
+    private double RelCinCad;
+    private double contextura;
     private int[] percentiles = {5,10,25,50,75,90,96};
 
     public Evaluator( String nom, String sex, int ed, int trici, int bici, int supra, int subes, float pe, float tal, float cint, float cad, float braq, float carp){
@@ -34,7 +49,7 @@ public class Evaluator {
             this.PesoIdeal = Math.pow(talla,2) * 21.5;
         }
         this.IPT = peso*100/PesoIdeal;
-        this.CMB = 10*braquial - tricipital * Math.PI;;
+        this.CMB = 10*braquial - tricipital * Math.PI;
         this.AMB = Math.pow(CMB,2)/(4*Math.PI);
         this.AGB = (Math.pow(braquial*10,2)/(4*Math.PI)) - AMB;
         this.RelCinCad = cintura/cadera;
@@ -135,7 +150,7 @@ public class Evaluator {
     }
 
    public String evaluarPercentilesCMB(int pmin, int pmax){
-        float prom = (pmin+pmax)/2;
+        float prom = (pmin+pmax)/2f;
         if(prom<=5){
             return "Déficit moderado a severo";
         }else if(prom>5 && prom <=25){
@@ -148,7 +163,7 @@ public class Evaluator {
    }
 
    public String evaluarPercentiles(int pmin, int pmax){
-        float prom = (pmin+pmax)/2;
+        float prom = (pmin+pmax)/2f;
         if(prom<=5){
             return "Déficit moderado a severo";
         }else if(prom>5 && prom <=10){

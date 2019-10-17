@@ -81,10 +81,11 @@ public class LoopUploadActivity extends AppCompatActivity {
         });
     }
 
-    public void executeFunctions() {
-        String jsonString;
+    public void EjecutarTareas() throws Exception {
+        String jsonString = null;
+        InputStream is = null;
         try {
-            InputStream is = getAssets().open("inputs_example.json");
+            is = getAssets().open("inputs_example.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -101,6 +102,11 @@ public class LoopUploadActivity extends AppCompatActivity {
             }
         }catch (Exception e){
             Log.e("ExecuteFunctions", e.toString());
+        }
+        finally {
+            if(is!=null) {
+                is.close();
+            }
         }
     }
 
