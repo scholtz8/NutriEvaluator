@@ -1,4 +1,5 @@
 package cscholtz.android.nutrievaluator;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
@@ -17,6 +18,7 @@ public class TemplatePDF {
     private Context context;
     private File pdfFile;
     private Document document;
+    private PdfWriter pdfWriter;
     private Paragraph paragraph;
     private Font fTitle = new Font(Font.FontFamily.TIMES_ROMAN,20, Font.BOLD);
     private Font fSubTitle = new Font(Font.FontFamily.TIMES_ROMAN,18, Font.BOLD,BaseColor.GRAY);
@@ -31,7 +33,7 @@ public class TemplatePDF {
         createFile(fileName);
         try {
             document = new Document(PageSize.A4);
-            PdfWriter pdfWriter = PdfWriter.getInstance(document,new FileOutputStream(pdfFile));
+            pdfWriter = PdfWriter.getInstance(document,new FileOutputStream(pdfFile));
             document.open();
         }catch (Exception e){
             Log.e("openDocument",e.toString());
@@ -86,7 +88,7 @@ public class TemplatePDF {
     }
 
     public void viewPDF(){
-        Intent intent = new Intent(context, PdfViewerActivity.class);
+        Intent intent = new Intent(context,PDFActivity.class);
         intent.putExtra("path",pdfFile.getAbsolutePath());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

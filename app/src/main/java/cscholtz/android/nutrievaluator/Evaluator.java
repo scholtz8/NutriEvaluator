@@ -1,88 +1,63 @@
 package cscholtz.android.nutrievaluator;
+
+import android.content.Context;
 import android.database.Cursor;
 
-
+import java.security.PrivilegedAction;
 
 public class Evaluator {
-    private static final String SEX1 = "Masculino";
-    private static final String BIG = "grande";
-    private static final String MED = "mediana";
-    private static final String SMALL = "pequeña";
-    private static final String NORM = "Normal";
-    private static final String RISK1 = "Riesgo Moderado";
-    private static final String RISK2 = "Riesgo Alto";
+    private String nombre,sexo;
+    private int edad, tricipital, bicipital, suprailiaco, subescapular;
+    private float peso, talla, cintura, cadera, braquial, carpo;
+    private double IMC, PesoIdeal,IPT,CMB,AMB,AGB,RelCinCad,contextura;
     private int[] percentiles = {5,10,25,50,75,90,96};
-    private String sexo;
-    private String nombre;
-    private int edad;
-    private int tricipital;
-    private int bicipital;
-    private int suprailiaco;
-    private int subescapular;
-    private float peso;
-    private float talla;
-    private float cintura;
-    private float cadera;
-    private float braquial;
-    private float carpo;
-    private double imc;
-    private double pesoIdeal;
-    private double ipt;
-    private double cmb;
-    private double amb;
-    private double agb;
-    private double relCinCad;
-    private double contextura;
 
-    public Evaluator( String nom, String sex, int ed, Float[] medidas, Integer[] pliegues, Float[] circunferencias){
+    public Evaluator( String nom, String sex, int ed, int trici, int bici, int supra, int subes, float pe, float tal, float cint, float cad, float braq, float carp){
         this.nombre = nom;
-        this.sexo = sex;
         this.edad = ed;
-        this.peso = medidas[0];
-        this.talla = medidas[1];
-        this.tricipital = pliegues[0];
-        this.bicipital = pliegues[1];
-        this.suprailiaco = pliegues[2];
-        this.subescapular = pliegues[3];
-        this.cintura = circunferencias[0];
-        this.cadera = circunferencias[1];
-        this.braquial = circunferencias[2];
-        this.carpo = circunferencias[3];
-        calcular();
-    }
+        this.sexo = sex;
+        this.tricipital = trici;
+        this.bicipital = bici;
+        this.suprailiaco = supra;
+        this.subescapular = subes;
+        this.peso = pe;
+        this.talla = tal;
+        this.cintura = cint;
+        this.braquial = braq;
+        this.cadera = cad;
+        this.carpo = carp;
 
-    private void calcular(){
-        this.imc = peso/Math.pow(talla,2);
-        if(sexo.equals(SEX1)){
-            this.pesoIdeal = Math.pow(talla,2) * 22;
+        this.IMC = peso/Math.pow(talla,2);
+        if(sexo.equals("Masculino")){
+            this.PesoIdeal = Math.pow(talla,2) * 22;
         }else{
-            this.pesoIdeal = Math.pow(talla,2) * 21.5;
+            this.PesoIdeal = Math.pow(talla,2) * 21.5;
         }
-        this.ipt = peso*100/ pesoIdeal;
-        this.cmb = 10*braquial - tricipital * Math.PI;
-        this.amb = Math.pow(cmb,2)/(4*Math.PI);
-        this.agb = (Math.pow(braquial*10,2)/(4*Math.PI)) - amb;
-        this.relCinCad = cintura/cadera;
+        this.IPT = peso*100/PesoIdeal;
+        this.CMB = 10*braquial - tricipital * Math.PI;;
+        this.AMB = Math.pow(CMB,2)/(4*Math.PI);
+        this.AGB = (Math.pow(braquial*10,2)/(4*Math.PI)) - AMB;
+        this.RelCinCad = cintura/cadera;
         this.contextura = 100*talla/carpo;
     }
 
     public double getIMC(){
-        return imc;
+        return IMC;
     }
     public double getIPT(){
-        return ipt;
+        return IPT;
     }
     public double getPesoIdeal(){
-        return pesoIdeal;
+        return PesoIdeal;
     }
     public double getCMB(){
-        return cmb;
+        return CMB;
     }
     public double getAMB(){
-        return amb;
+        return AMB;
     }
     public double getAGB(){
-        return agb;
+        return AGB;
     }
     public double getPT(){
         return tricipital;
@@ -91,7 +66,7 @@ public class Evaluator {
         return cintura;
     }
     public double getRelCinCad(){
-        return relCinCad;
+        return RelCinCad;
     }
     public double getContextura(){
         return contextura;
@@ -132,11 +107,11 @@ public class Evaluator {
     }
 
     public String evaluarIMC(){
-        if(imc <18.5){
+        if(IMC<18.5){
             return "Enflaquecido";
-        }else if(imc >= 18.5 && imc <25){
-            return NORM;
-        }else if(imc >=25 && imc <30){
+        }else if(IMC>= 18.5 && IMC <25){
+            return "Normal";
+        }else if(IMC>=25 && IMC<30){
             return "Sobrepeso";
         }else{
             return "Obesidad";
@@ -144,15 +119,15 @@ public class Evaluator {
     }
 
     public String evaluarIPT(){
-        if(ipt <70){
+        if(IPT<70){
             return "Desnutricion Severa";
-        }else if(ipt >= 70 && ipt <80){
+        }else if(IPT>= 70 && IPT <80){
             return "Desnutricion Moderada";
-        }else if(ipt >=80 && ipt <90){
+        }else if(IPT>=80 && IPT<90){
             return "Desnutricion Leve";
-        }else if(ipt >=90 && ipt <110){
-            return NORM;
-        }else if(ipt >=110 && ipt <120){
+        }else if(IPT>=90 && IPT<110){
+            return "Normal";
+        }else if(IPT>=110 && IPT<120){
             return "Sobrepeso";
         }else{
             return "Obesidad";
@@ -160,7 +135,7 @@ public class Evaluator {
     }
 
    public String evaluarPercentilesCMB(int pmin, int pmax){
-        float prom = (pmin+pmax)/2f;
+        float prom = (pmin+pmax)/2;
         if(prom<=5){
             return "Déficit moderado a severo";
         }else if(prom>5 && prom <=25){
@@ -173,7 +148,7 @@ public class Evaluator {
    }
 
    public String evaluarPercentiles(int pmin, int pmax){
-        float prom = (pmin+pmax)/2f;
+        float prom = (pmin+pmax)/2;
         if(prom<=5){
             return "Déficit moderado a severo";
         }else if(prom>5 && prom <=10){
@@ -188,66 +163,66 @@ public class Evaluator {
     }
 
     public String evaluarCintura(){
-        if(sexo.equals(SEX1)){
+        if(sexo.equals("Masculino")){
             if(cintura<94){
-                return NORM;
+                return "Normal";
             }else if(cintura>=94 && cintura<102){
-                return RISK1;
+                return "Riesgo moderado";
             }else{
-                return RISK2;
+                return "Riesgo Alto";
             }
         }else{
             if(cintura<80){
-                return NORM;
+                return "Normal";
             }else if(cintura>=80 && cintura<88){
-                return RISK1;
+                return "Riesgo moderado";
             }else{
-                return RISK2;
+                return "Riesgo Alto";
             }
         }
     }
 
     public String evaluarRelCinCad(){
-        if(sexo.equals(SEX1)){
-            if(relCinCad <0.9){
-                return NORM;
-            }else if(relCinCad >=0.9 && relCinCad <=1){
-                return RISK1;
+        if(sexo.equals("Masculino")){
+            if(RelCinCad<0.9){
+                return "Normal";
+            }else if(RelCinCad>=0.9 && RelCinCad<=1){
+                return "Riesgo moderado";
             }else{
-                return RISK2;
+                return "Riesgo Alto";
             }
         }else{
-            if(relCinCad <0.75){
-                return NORM;
-            }else if(relCinCad >=0.75 && relCinCad <=0.85){
-                return RISK1;
+            if(RelCinCad<0.75){
+                return "Normal";
+            }else if(RelCinCad>=0.75 && RelCinCad<=0.85){
+                return "Riesgo moderado";
             }else{
-                return RISK2;
+                return "Riesgo Alto";
             }
         }
     }
 
     public String evaluarContextura(){
-        if(sexo.equals(SEX1)){
+        if(sexo.equals("Masculino")){
             if(contextura<9.6){
-                return BIG;
+                return "grande";
             }else if(contextura>=9.6 && contextura<=10.4){
-                return MED;
+                return "mediana";
             }else{
-                return SMALL;
+                return "pequeña";
             }
         }else{
             if(contextura<10.1){
-                return BIG;
+                return "grande";
             }else if(contextura>=10.1 && contextura<=11){
-                return MED;
+                return "mediana";
             }else{
-                return SMALL;
+                return "pequeña";
             }
         }
     }
 
-    public Integer[] percentiles(Cursor c){
+    public Integer[] Percentiles(Cursor c){
         c.moveToFirst();
         Integer[] pe = new Integer[7];
         for(int i=0;i<7;i++){
