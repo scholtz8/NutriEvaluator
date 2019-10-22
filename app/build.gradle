@@ -23,8 +23,8 @@ android {
 sonarqube{
     sonarqube{
         properties{
-            property "sonar.projectName","NutriEvaluatorBase"
-            property "sonar.projectKey","NutriEvaluatorBase"
+            property "sonar.projectName","NutriEvaluator0"
+            property "sonar.projectKey","NutriEvaluator0"
             property "sonar.host.url","http://localhost:9000"
             property "sonar.projectVersion","1"
             property "sonar.language","java"

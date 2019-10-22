@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class CacheUploadActivity extends AppCompatActivity {
 
     private Button startButton;
     private TextView tiempo;
+
     private String nombre;
     private String sexo;
     private String edad;
@@ -69,6 +71,7 @@ public class CacheUploadActivity extends AppCompatActivity {
     private String t2; //Time inicial y final
     private Date d1;
     private Date d2; //Para obtener tiempo inicial y final
+    private String ExtDir = Environment.getExternalStorageDirectory().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +92,12 @@ public class CacheUploadActivity extends AppCompatActivity {
                 try {
                     EjecutarTareas();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("TryEjecutarTareas",e.toString());
                 }
             }
         });
     }
-    
+
     public void EjecutarTareas() throws Exception {
         String jsonString;
         InputStream is = null;
@@ -112,15 +115,14 @@ public class CacheUploadActivity extends AppCompatActivity {
                     InputEjemplo();
                     EvaluarDatos();
                     crearPDF();
-                    ut.addSource(Environment.getExternalStorageDirectory().toString() + "/PDF/" + FileName + ".pdf");
+                    ut.addSource(ExtDir + "/PDF/" + FileName + ".pdf");
                 }
-                ut.setDestinationFileName(Environment.getExternalStorageDirectory().toString() + "/PDF/MergedPDF.pdf");
+                ut.setDestinationFileName(ExtDir + "/PDF/MergedPDF.pdf");
                 ut.mergeDocuments();
                 subirArchivo();
             }
-
         }catch (Exception e){
-            e.printStackTrace();
+            Log.e("TryInEjecutarTareas",e.toString());
         }
         finally {
             if(is!=null) {
@@ -130,7 +132,7 @@ public class CacheUploadActivity extends AppCompatActivity {
     }
 
     public void subirArchivo(){
-        File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/MergedPDF.pdf");
+        File f1 = new File(ExtDir+"/PDF/MergedPDF.pdf");
         Uri uri_file = Uri.fromFile(f1);
         StorageReference stg = storageReference.child("Cache").child(f1.getName());
         stg.putFile(uri_file)
@@ -142,7 +144,7 @@ public class CacheUploadActivity extends AppCompatActivity {
                             d1 = tsf.parse(t1);
                             d2 = tsf.parse(t2);
                         } catch (ParseException e) {
-                            e.printStackTrace();
+                            Log.e("TrySubirArchivoOnSucess",e.toString());
                         }
                         long diff = d2.getTime()-d1.getTime();
                         tiempo.setText(String.valueOf(diff)+" miliseconds");
@@ -198,7 +200,6 @@ public class CacheUploadActivity extends AppCompatActivity {
         sexo = jsonObject.getString("sexo");
         edad = jsonObject.getString("edad");
         peso = jsonObject.getString("peso");
-        peso = jsonObject.getString("peso");
         talla = jsonObject.getString("talla");
         cintura = jsonObject.getString("cintura");
         cadera = jsonObject.getString("cadera");
@@ -211,4 +212,3 @@ public class CacheUploadActivity extends AppCompatActivity {
     }
 
 }
-

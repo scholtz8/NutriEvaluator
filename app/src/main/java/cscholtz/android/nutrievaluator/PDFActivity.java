@@ -23,6 +23,7 @@ public class PDFActivity extends AppCompatActivity {
     private File file;
     Bundle bundle;
     private StorageReference storageReference;
+    private String ExtDir = Environment.getExternalStorageDirectory().toString();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class PDFActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.upload_item){
-                File f1 = new File(Environment.getExternalStorageDirectory().toString()+"/PDF/"+file.getName());
+                File f1 = new File(ExtDir+"/PDF/"+file.getName());
                 Uri uri_file = Uri.fromFile(f1);
                 StorageReference stg = storageReference.child(f1.getName());
                 stg.putFile(uri_file)

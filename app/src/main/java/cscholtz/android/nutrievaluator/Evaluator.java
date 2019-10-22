@@ -1,7 +1,5 @@
 package cscholtz.android.nutrievaluator;
-
 import android.database.Cursor;
-
 
 public class Evaluator {
     private String nombre;
@@ -149,7 +147,7 @@ public class Evaluator {
         }
     }
 
-   public String evaluarPercentilesCMB(int pmin, int pmax){
+    public String evaluarPercentilesCMB(int pmin, int pmax){
         float prom = (pmin+pmax)/2f;
         if(prom<=5){
             return "Déficit moderado a severo";
@@ -160,10 +158,11 @@ public class Evaluator {
         }else{
             return "Reserva normal alta";
         }
-   }
+    }
 
-   public String evaluarPercentiles(int pmin, int pmax){
-        float prom = (pmin+pmax)/2f;
+    public String evaluarPercentiles(int pmin, int pmax){
+        float prom = (pmin+pmax)/2f
+                ;
         if(prom<=5){
             return "Déficit moderado a severo";
         }else if(prom>5 && prom <=10){

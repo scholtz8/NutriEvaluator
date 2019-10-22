@@ -24,6 +24,7 @@ public class TemplatePDF {
     private Font fSubTitle = new Font(Font.FontFamily.TIMES_ROMAN,18, Font.BOLD,BaseColor.GRAY);
     private Font fText = new Font(Font.FontFamily.TIMES_ROMAN,12, Font.BOLD);
     private Font fHighText = new Font(Font.FontFamily.TIMES_ROMAN,15, Font.BOLD, BaseColor.BLUE);
+    private String ExtDir = Environment.getExternalStorageDirectory().toString();
 
     public TemplatePDF(Context context){
         this.context = context;
@@ -80,7 +81,7 @@ public class TemplatePDF {
     }
 
     private void createFile(String file_name){
-        File folder = new File(Environment.getExternalStorageDirectory().toString(),"PDF");
+        File folder = new File(ExtDir,"PDF");
         if(!folder.exists()){
             folder.mkdirs();
         }
