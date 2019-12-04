@@ -24,61 +24,40 @@ import java.util.Date;
 
 public class LoopUploadActivity extends AppCompatActivity {
 
+    private String ExtDir = Environment.getExternalStorageDirectory().toString();
     private Button startButton;
-    private TextView tiempo;
+    private TextView time;
+    //input parameters
+    private String nombre,sexo,edad,peso,talla,cintura,cadera,braquial,carpo,tricipital,bicipital,suprailiaco,subescapular;
+    //creates and access DB
+    private SqliteOpenHelper helper = new SqliteOpenHelper(this,"BD1",null,1);
+    //strgin for writing in pfd, values obtained by evaluator
+    private String IMC,IPT,PESO_IDEAL,CMB,AMB,AGB,PT,CIN,RELCINCAD,CONTEXTURA;
 
-    private String nombre;
-    private String sexo;
-    private String edad;
-    private String peso;
-    private String talla;
-    private String cintura;
-    private String cadera;
-    private String braquial;
-    private String carpo;
-    private String tricipital;
-    private String bicipital;
-    private String suprailiaco;
-    private String subescapular;//reciben los parametros de los inputs
-    private SqliteOpenHelper helper = new SqliteOpenHelper(this,"BD1",null,1); //clase que crea y hace consultas a la base de datos
-    private String IMC;
-    private String IPT;
-    private String PESO_IDEAL;
-    private String CMB;
-    private String AMB;
-    private String AGB;
-    private String PT;
-    private String CIN;
-    private String RELCINCAD;
-    private String CONTEXTURA; //reciben los string de texto a poner el el pdf, con valores obtenidos del evaluador
-
-    //Clase para crear el archivo PDF
+    //class for creating pdf
     private TemplatePDF templatePDF;
-    //Guarda el nombre del archivo PDF actual
+    //saves name of current pdf file
     private String FileName;
 
-    //Referencia a Storage para acceder a FirebaseStorage en la Cloud
+    //reference to access a Cloud Firebase Storage
     private StorageReference storageReference;
 
-    //JasonObjhect para recorrer el archivo .json
+    //JasonObjhect to read .json file with inputs
     private JSONObject jsonObject;
-    private int num;
-    private int len; //numero contador de archivos subidos a la nube // cantidad de input a sacar del archivo .json
+    int num;//counter of files uploaded
+    private int len; // number of inputs
 
-    //Variables para hacer la medicion dl tiempo de ejecucion de la tarea
+    //for measuring the time
     private SimpleDateFormat tsf;
-    private String t1;
-    private String t2; //Time inicial y final
-    private Date d1;
-    private Date d2; //Para obtener tiempo inicial y final
-    private String ExtDir = Environment.getExternalStorageDirectory().toString();
+    private String t1,t2;
+    private Date d1,d2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loop_upload);
         startButton = (Button) findViewById(R.id.startButtonLoop);
-        tiempo = (TextView) findViewById(R.id.tiempoLoop);
+        time = (TextView) findViewById(R.id.timeLoop);
 
         tsf = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss.SSS");
         d1 = null;
@@ -91,15 +70,15 @@ public class LoopUploadActivity extends AppCompatActivity {
             public void onClick(View v) {
                 t1 = tsf.format(new Date());
                 try {
-                    EjecutarTareas();
+                    runTasks();
                 } catch (Exception e) {
-                    Log.e("TryEjecutarTareas",e.toString());
+                    Log.e("TryrunTasks",e.toString());
                 }
             }
         });
     }
 
-    public void EjecutarTareas() throws Exception {
+    public void runTasks() throws Exception {
         String jsonString = null;
         InputStream is = null;
         try {
@@ -112,14 +91,14 @@ public class LoopUploadActivity extends AppCompatActivity {
                 len= 20;
                 for(int i = 0;i<len; i++){
                     jsonObject = jsonArray.getJSONObject(i);
-                    InputEjemplo();
-                    EvaluarDatos();
-                    crearPDF();
-                    subirArchivo();
+                    inputReceiver();
+                    evaluateData();
+                    createPDF();
+                    uploadFile();
                 }
             }
         }catch (Exception e){
-            Log.e("TryInEjecutarTareas",e.toString());
+            Log.e("TryInrunTasks",e.toString());
         }
         finally {
             if(is!=null) {
@@ -128,7 +107,7 @@ public class LoopUploadActivity extends AppCompatActivity {
         }
     }
 
-    public void subirArchivo(){
+    public void uploadFile(){
         File f1 = new File(ExtDir+"/PDF/"+FileName+".pdf");
         Uri uri_file = Uri.fromFile(f1);
         StorageReference stg = storageReference.child("Loop").child(f1.getName());
@@ -143,16 +122,16 @@ public class LoopUploadActivity extends AppCompatActivity {
                                 d1 = tsf.parse(t1);
                                 d2 = tsf.parse(t2);
                             } catch (ParseException e) {
-                                Log.e("TrySubirArchivoOnSucess",e.toString());
+                                Log.e("TryuploadFile",e.toString());
                             }
                             long diff = d2.getTime()-d1.getTime();
-                            tiempo.setText(String.valueOf(diff)+" miliseconds");
+                            time.setText(String.valueOf(diff)+" miliseconds");
                         }
                     }
                 });
     }
 
-    public void crearPDF(){
+    public void createPDF(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String currentDate = sdf.format(new Date());
         templatePDF = new TemplatePDF(getApplicationContext());
@@ -173,7 +152,7 @@ public class LoopUploadActivity extends AppCompatActivity {
         templatePDF.closeDocument();
     }
 
-    public void EvaluarDatos(){
+    public void evaluateData(){
         Evaluator E = new Evaluator(nombre, sexo, new Integer(edad),  new Integer(tricipital),  new Integer(bicipital),  new Integer(suprailiaco), new Integer(subescapular),  new Float(peso),  new Float(talla),  new Float(cintura),  new Float(cadera),  new Float(braquial),  new Float(carpo));
         helper.abrir();
         String e = helper.getIdEdad(new Integer(edad));
@@ -194,7 +173,7 @@ public class LoopUploadActivity extends AppCompatActivity {
         helper.cerrar();
     }
 
-    public void InputEjemplo()throws Exception{
+    public void inputReceiver()throws Exception{
         nombre = jsonObject.getString("nombre");
         sexo = jsonObject.getString("sexo");
         edad = jsonObject.getString("edad");

@@ -88,10 +88,4 @@ public class TemplatePDF {
         pdfFile = new File(folder,file_name+".pdf");
     }
 
-    public void viewPDF(){
-        Intent intent = new Intent(context,PDFActivity.class);
-        intent.putExtra("path",pdfFile.getAbsolutePath());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
 }

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/upload_item"
-        android:icon="@drawable/ic_file_upload_icon"
-        android:title="upload_item"
-        app:showAsAction="ifRoom"
-        />
-</menu>

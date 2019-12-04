@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tiempoLoop"
+        android:id="@+id/timeLoop"
         android:layout_width="317dp"
         android:layout_height="29dp"
         android:layout_marginTop="48dp"
