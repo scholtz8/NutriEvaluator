@@ -2,27 +2,10 @@ package cscholtz.android.nutrievaluator;
 import android.database.Cursor;
 
 public class Evaluator {
-    private String nombre;
-    private String sexo;
-    private int edad;
-    private int tricipital;
-    private int bicipital;
-    private int suprailiaco;
-    private int subescapular;
-    private float peso;
-    private float talla;
-    private float cintura;
-    private float cadera;
-    private float braquial;
-    private float carpo;
-    private double IMC;
-    private double PesoIdeal;
-    private double IPT;
-    private double CMB;
-    private double AMB;
-    private double AGB;
-    private double RelCinCad;
-    private double contextura;
+    private String nombre,sexo;
+    private int edad,tricipital,bicipital,suprailiaco,subescapular;
+    private float peso,talla,cintura,cadera,braquial,carpo;
+    private double IMC,PesoIdeal,IPT,CMB,AMB,AGB,RelCinCad,contextura;
     private int[] percentiles = {5,10,25,50,75,90,96};
 
     public Evaluator( String nom, String sex, int ed, int trici, int bici, int supra, int subes, float pe, float tal, float cint, float cad, float braq, float carp){
